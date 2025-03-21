@@ -1,42 +1,48 @@
 #include <iostream>
-#include <bitset>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(NULL);
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+	vector<int> S(21);
+	string order;
+	int M, x;;
+	cin >> M;
+	while (M--) {
+		cin >> order;
+		if (order == "add") {
+			cin >> x;
+			S[x] = 1;
+		}
+		else if (order == "remove") {
+			cin >> x;
+			S[x] = 0;
+		}
+		else if (order == "check") {
+			cin >> x;
+			if (S[x]) {
+				cout << "1\n";
+			} else 
+				cout << "0\n";
+		}
+		else if (order == "toggle") {
+			cin >> x;
+			if (S[x] == 0) S[x] = 1;
+			else S[x] = 0;
+		}
+		else if (order == "all") {
+			for (int i = 1; i <= 20; i++) {
+				S[i] = 1;
+			}
+		}
+		else if (order == "empty") {
+			for (int i = 1; i <= 20; i++) {
+				S[i] = 0;
+			}
+		}
+	}
 
-    bitset<21> S;
-    string order;
-    int M, x;
-
-    cin >> M;
-    while (M--) {
-        cin >> order;
-
-        if (order == "add") {
-            cin >> x;
-            S.set(x);  // x 위치를 1로 설정 (O(1))
-        }
-        else if (order == "remove") {
-            cin >> x;
-            S.reset(x);  // x 위치를 0으로 설정 (O(1))
-        }
-        else if (order == "check") {
-            cin >> x;
-            cout << S.test(x) << "\n";  // x 위치의 값 출력 (O(1))
-        }
-        else if (order == "toggle") {
-            cin >> x;
-            S.flip(x);  // x 위치를 반전 (O(1))
-        }
-        else if (order == "all") {
-            S.set();  // 전체를 1로 설정 (O(1))
-        }
-        else if (order == "empty") {
-            S.reset();  // 전체를 0으로 설정 (O(1))
-        }
-    }
-
-    return 0;
+	return 0;
 }
