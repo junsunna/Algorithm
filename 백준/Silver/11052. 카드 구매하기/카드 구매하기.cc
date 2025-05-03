@@ -3,7 +3,7 @@
 using namespace std;
 
 int N;
-int dp[1001] = { 0 };
+int dp[1001];
 int P[1001];
 
 int main() {
@@ -16,8 +16,9 @@ int main() {
 	dp[1] = P[1];
 	dp[2] = max(dp[1] * 2, P[2]);
 	for (int i = 3; i <= N; i++) {
+		dp[i] = P[i];
 		for (int j = 1; j < i; j++) {
-			dp[i] = max(max(dp[j] + dp[i - j], P[i]), dp[i]);
+			dp[i] = max(dp[j] + dp[i - j], dp[i]);
 		}
 	}
 	cout << dp[N];
