@@ -14,6 +14,8 @@ int dc[6] = { 1, -1, 0, 0, 0, 0 };
 queue<pair<pair<int, int>, int>> q;
 
 void bfs() {
+	ios::sync_with_stdio(0);
+	cin.tie(0);
 	int firstH = q.front().first.first;
 	int firstN = q.front().first.second;
 	int firstM = q.front().second;
