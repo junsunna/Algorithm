@@ -1,95 +1,75 @@
 #include <iostream>
 #include <queue>
-#include <vector>
-#include <algorithm>
+#include <utility>
 using namespace std;
- 
+
+int result = 1;
 int N;
-const int MAX = 101;
-int input[MAX][MAX];
-int map[MAX][MAX];
-bool visited[MAX][MAX];
-int dy[] = { 0,0,-1,1 };
-int dx[] = { -1,1,0,0 };
+int grid[101][101];
+bool visited[101][101];
 queue<pair<int, int>> q;
-vector<int> v; //영역 개수 저장 벡터
-int cnt; //영역 개수
- 
-void BFS(int y, int x) {
-    visited[y][x] = true;
-    q.push(make_pair(y, x));
- 
-    while (!q.empty()) {
-        y = q.front().first;
-        x = q.front().second;
-        q.pop();
- 
-        for (int i = 0; i < 4; i++) {
-            int ny = y + dy[i];
-            int nx = x + dx[i];
- 
-            if (ny < 0 || nx < 0 || ny >= N || nx >= N)
-                continue;
-            if (map[ny][nx] && !visited[ny][nx]) {
-                visited[ny][nx] = true;
-                q.push(make_pair(ny, nx));
-            }
-        }
-    }
+int dr[4] = { 0, 0, 1, -1 };
+int dc[4] = { 1, -1, 0, 0 };
+int cnt = 0;
+
+void bfs(int depth, int startR, int startC) {
+	if (visited[startR][startC] || grid[startR][startC] <= depth) return;
+	q.push(make_pair(startR, startC));
+	visited[startR][startC] = true;
+	cnt++;
+
+	while (!q.empty()) {
+		int curR = q.front().first;
+		int curC = q.front().second;
+		q.pop();
+
+		for (int i = 0; i < 4; i++) {
+			int nowR = curR + dr[i];
+			int nowC = curC + dc[i];
+
+			if (nowR < 1 || nowR > N ||
+				nowC < 1 || nowC > N ||
+				visited[nowR][nowC] ||
+				grid[nowR][nowC] <= depth) continue;
+			q.push(make_pair(nowR, nowC));
+			visited[nowR][nowC] = true;
+		}
+	}
 }
- 
-void reset() {
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            map[i][j] = 0;
-            visited[i][j] = 0;
-        }
-    }
-    cnt = 0;
-}
- 
+
 int main() {
-    int maxHeight = -1;
-    cin >> N;
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            cin >> input[i][j];
-            if (input[i][j] > maxHeight) {
-                maxHeight = input[i][j];
-            }
-        }
-    }
- 
-    for (int h = 1; h <= maxHeight; h++) {
-        /*h미만 물에 잠김*/
- 
-        /*h미만=0 h이상=1 */
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (input[i][j] < h) {
-                    map[i][j] = 0;
-                }
-                else {
-                    map[i][j] = 1;
-                }
-            }
-        }
- 
-        /*BFS 영역 개수 구하기*/
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                if (map[i][j] && !visited[i][j]) {
-                    BFS(i, j);
-                    cnt++;
-                }
-            }
-        }
-        v.push_back(cnt);
-        
-        /*초기화*/
-        reset();
-    }
- 
-    sort(v.begin(), v.end()); //오름차순 정렬
-    cout << v[v.size() - 1];  //최댓값 출력
+	int min = 100, max = 0;
+	cin >> N;
+	for (int i = 1; i <= N; i++) {
+		for (int j = 1; j <= N; j++) {
+			cin >> grid[i][j];
+			visited[i][j] = 0;
+			if (min > grid[i][j])
+				min = grid[i][j];
+			if (max < grid[i][j])
+				max = grid[i][j];
+		}
+	}
+
+	for (int i = 0; i <= max; i++) {
+		cnt = 0;
+		for (int j = 1; j <= N; j++) {
+			for (int k = 1; k <= N; k++) {
+				visited[j][k] = false;
+				if (grid[j][k] <= i)
+					visited[j][k] = true;
+			}
+		}
+		for (int j = 1; j <= N; j++) {
+			for (int k = 1; k <= N; k++) {
+				if (!visited[j][k])
+					bfs(i, j, k);
+			}
+		}
+		if (cnt > result) result = cnt;
+		
+	}
+	cout << result;
+
+	return 0;
 }
