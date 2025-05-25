@@ -1,74 +1,58 @@
-#include <bits/stdc++.h> 
+#include <iostream>
+#include <queue>
+#include <vector>
+#include <tuple>
 using namespace std;
-const int INF = 2e9;
-const int inf = 1e9;
+#define INF 1e9
 
-vector<pair<int, int> > v[100001]; // node, cost
-bool visited[100001];
+int N, M;
+vector<tuple<int, int>> graph[100000];
 
-int bfs(int i1, int i2) {
-	int lo = 1;
-	int hi = 1e9;
-	int mid;
-	int ret;
-	
-	while (lo <= hi) {
-		mid = (lo + hi) / 2;
-		
-		for (int i = 0; i < 100001; i++) visited[i] = false;
-		
-		queue<int> que;
-		que.push(i1);
-		visited[i1] = true;
-		bool canMore = false;
-		
-		while (!que.empty()) {
-			int node = que.front();
-			que.pop();
-			if (node == i2) {
-				// mid 의 무게로 i1 - i2로 도착한 상황
-				 canMore = true;
-				 break;
-			}
-			
-			for (int i = 0; i < v[node].size(); i++) {
-				int next = v[node][i].first;
-				int cost = v[node][i].second;
-				if (visited[next]) continue;
-				if (mid > cost) continue;
-				visited[next] = true;
-				que.push(next);
-			}
+int dijkstra(int start, int end) {
+	vector<int> dist(N + 1, 0);
+	priority_queue<tuple<int, int>> pq;
+	pq.push({ INF, start });
+	/*for (int i = 1; i <= N; i++) {
+		dist[i] = INF;
+	}*/
+	dist[start] = INF;
+
+	while (!pq.empty()) {
+		tuple<int, int> cur = pq.top();
+		pq.pop();
+		int curD = get<0>(cur);
+		int curN = get<1>(cur);
+
+		if (curN == end) {
+			return curD;
 		}
-		if (canMore) {
-			// 더 무겁게 가능? 
-			lo = mid + 1;
-			ret = mid;
-		}
-		else {
-			// 더 가볍게 가능?
-			hi = mid - 1; 
+		for (auto & edge : graph[curN]) {
+			int nowN = get<0>(edge);
+			int nowD = get<1>(edge);
+			int bottleneck = min(curD, nowD);
+			if (bottleneck > dist[nowN]) {
+				dist[nowN] = bottleneck;
+				pq.push({ bottleneck, nowN });
+			}
 		}
 	}
-	return ret;
+	return 0;
 }
 
-int main(void){
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL);
-	
-	int n, m;
-	cin >> n >> m;
-	for (int i = 0; i < m; i++) {
+
+int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
+
+	cin >> N >> M;
+	for (int i = 0; i < M; i++) {
 		int a, b, c;
 		cin >> a >> b >> c;
-		// 양방향 그래프화 
-		v[a].push_back({b, c});
-		v[b].push_back({a, c});
+		graph[a].push_back({ b, c });
+		graph[b].push_back({ a, c });
 	}
-	int i1, i2;
-	cin >> i1 >> i2;
-	int ans = bfs(i1, i2);
-	cout << ans;
+	int s, e;
+	cin >> s >> e;
+	cout << dijkstra(s, e);
 	return 0;
 }
