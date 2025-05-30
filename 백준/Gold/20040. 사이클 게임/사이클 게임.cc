@@ -31,6 +31,8 @@ bool union_set(int x, int y) {
 }
 
 int main() {
+	ios::sync_with_stdio(false);
+	cin.tie(0);
 	cin >> N >> M;
 	parent.resize(N);
 	ranks.resize(N, 0);
