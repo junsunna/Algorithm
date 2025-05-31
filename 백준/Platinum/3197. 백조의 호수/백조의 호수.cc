@@ -102,6 +102,7 @@ void day_water() {
 }
 
 int main() {
+	ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
 	cin >> R >> C;
 	bool l1 = false;
 	parent.resize((R + 1) * (C + 1));
