@@ -36,24 +36,32 @@ int main() {
 	cin >> T;
 	while (T--) {
 		cin >> F;
-		parent.resize(F * 2);
-		sizes.resize(F * 2, 1);
-		for (int i = 0; i < F * 2; i++) {
-			parent[i] = i;
-		}
-		string x, y;
-		for (int i = 0; i < F*2; i+=2) {
-			cin >> x >> y;
-			if (um.find(x) == um.end())
-				um[x] = i;
-			if (um.find(y) == um.end())
-				um[y] = i + 1;
-			union_set(um[x], um[y]);
-			cout << sizes[find(um[x])] << '\n';
-		}	
+
 		parent.clear();
 		sizes.clear();
 		um.clear();
+
+		string x, y;
+		int idx = 0;
+		for (int i = 0; i < F; i++) {
+			cin >> x >> y;
+
+			if (um.find(x) == um.end()) {
+				um[x] = idx;
+				parent.push_back(idx);
+				sizes.push_back(1);
+				idx++;
+			}
+			if (um.find(y) == um.end()) {
+				um[y] = idx;
+				parent.push_back(idx);
+				sizes.push_back(1);
+				idx++;
+			}
+
+			union_set(um[x], um[y]);
+			cout << sizes[find(um[x])] << '\n';
+		}	
 	}
 	return 0;
 }
