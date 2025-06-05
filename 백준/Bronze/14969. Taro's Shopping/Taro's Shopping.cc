@@ -16,7 +16,6 @@ int main() {
         for (int i = 0; i < n; i++) {
             cin >> v[i];
         }
-        sort(v.begin(), v.end());
         int a, b;
         int max = 0;
         bool result = false;
