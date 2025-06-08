@@ -14,6 +14,8 @@ int w(int a, int b, int c) {
 }
 
 int main() {
+	ios::sync_with_stdio(false);
+	cin.tie();
 	for (int i = 0; i <= 50; i++) {
 		for (int j = 0; j <= 50; j++) {
 			for (int k = 0; k <= 50; k++) {
