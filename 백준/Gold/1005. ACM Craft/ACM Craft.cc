@@ -41,7 +41,7 @@ int main() {
 			int cur = q.front();
 			q.pop();
 
-			//if (cur == W) break;
+			if (cur == W) break;
 
 			for (int next : graph[cur]) {
 				indegree[next]--;
