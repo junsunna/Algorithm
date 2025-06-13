@@ -16,10 +16,8 @@ int main() {
 			}
 		}
 	}
-	while (true) {
-		cin >> N;
-		if (N == 0) return 0;
-
+	while (cin >> N) {
+		if (N == 0) break;
 		int cnt = 0;
 		for (int i = N + 1; i <= N * 2; i++) {
 			if (!prime[i]) cnt++;
