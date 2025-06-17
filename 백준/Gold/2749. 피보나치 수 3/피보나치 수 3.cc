@@ -2,16 +2,15 @@
 #include <vector>
 using namespace std;
 #define MOD 1000000
-long long N;
 
-vector<long long> matMulVec(vector<vector<long long>>& a, vector<long long>& b) {
+vector<long long> matMulVec(vector<vector<long long>>& a, vector<long long> b) {
 	vector<long long> res(2);
 	res[0] = (a[0][0] * b[0] + a[0][1] * b[1]) % MOD;
 	res[1] = (a[1][0] * b[0] + a[1][1] * b[1]) % MOD;
 	return res;
 }
 
-vector<vector<long long>> matMul(vector<vector<long long>>& a, vector<vector<long long>>& b) {
+vector<vector<long long>> matMul(vector<vector<long long>> a, vector<vector<long long>> b) {
 	vector<vector<long long>> res(2, vector<long long>(2));
 	for (int i = 0; i < 2; i++)
 		for (int j = 0; j < 2; j++)
@@ -37,11 +36,13 @@ long long fib(long long n) {
 
 	vector<long long> init = { 1, 0 };
 	vector<long long> result = matMulVec(an, init);
-
 	return result[0];
 }
 
+
+
 int main() {
+	long long N;
 	cin >> N;
 	cout << fib(N);
 	return 0;
