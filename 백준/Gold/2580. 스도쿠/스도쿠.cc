@@ -1,81 +1,55 @@
 #include <iostream>
-// BOJ - 2580 Sudoku
+#include <vector>
 using namespace std;
 
+vector<pair<int, int>> blanks;
 int board[9][9];
-bool already[10];
-int proper[10];
-int zeros, zerocnt;
 
-void check(int x, int y) {
-	int xx = (x / 3) * 3, yy = (y / 3) * 3;
-
-	for (int i = 0; i < 10; i++) already[i] = false;
+void printBoard() {
 	for (int i = 0; i < 9; i++) {
-		already[board[i][y]] = true;
-		already[board[x][i]] = true;
-	}
-	for (int i = 0; i < 3; i++) {
-		for (int j = 0; j < 3; j++)
-			already[board[xx + i][yy + j]] = true;
+		for (int j = 0; j < 9; j++)
+			cout << board[i][j] << ' ';
+		cout << '\n';
 	}
 }
 
-bool propercheck(int x, int y, int k) {
-	int xx = (x / 3) * 3, yy = (y / 3) * 3;
+bool isValid(int row, int col, int num) {
+	for (int i = 0; i < 9; i++)
+		if (board[row][i] == num) return false;
+	for (int i = 0; i < 9; i++)
+		if (board[i][col] == num) return false;
 
-	for (int i = 0; i < 9; i++)
-		if (board[i][y] == k) return false;
-	for (int i = 0; i < 9; i++)
-		if (board[x][i] == k) return false;
-	for (int i = 0; i < 3; i++) {
+	int startRow = row / 3 * 3;
+	int startCol = col / 3 * 3;
+	for (int i = 0; i < 3; i++)
 		for (int j = 0; j < 3; j++)
-			if (board[xx + i][yy + j] == k)
-				return false;
-	}
-
+			if (board[startRow + i][startCol + j] == num) return false;
 	return true;
 }
 
-bool sudoku(int n) {
-	if (zerocnt == zeros) {
-		for (int i = 0; i < 9; i++) {
-			for (int j = 0; j < 9; j++)
-				cout << board[i][j] << ' ';
-			cout << endl;
-		}
-		return true;
+void dfs(int idx) {
+	if (idx == blanks.size()) {
+		printBoard();
+		exit(0);
 	}
+	int x = blanks[idx].first;
+	int y = blanks[idx].second;
 
-	int i = n / 9, j = n % 9;
-
-	if (board[i][j] == 0) {	
-		for (int k = 1; k <= 9; k++) {
-			check(i, j);
-
-			if (already[k] == false && propercheck(i, j, k)) {
-				board[i][j] = k; already[k] = true; zerocnt++;
-				if (sudoku(n + 1)) return true;
-				board[i][j] = 0; already[k] = false; zerocnt--;
-			}
+	for (int i = 1; i <= 9; i++) {
+		if (isValid(x, y, i)) {
+			board[x][y] = i;
+			dfs(idx + 1);
+			board[x][y] = 0;
 		}
 	}
-	else return sudoku(n + 1);
-
-	return false;
 }
 
-int main(void) {
-	ios::sync_with_stdio(false);
-	cin.tie(NULL); cout.tie(NULL);
-
+int main() {
 	for (int i = 0; i < 9; i++) {
 		for (int j = 0; j < 9; j++) {
 			cin >> board[i][j];
-			if (board[i][j] == 0) zeros++;
+			if (board[i][j] == 0) blanks.push_back({i, j});
 		}
 	}
-	sudoku(0);
-
-	return 0;
+	dfs(0);
 }
